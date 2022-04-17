@@ -133,7 +133,7 @@ class Network(object):
         test_data = zip(*list_test_data)
         print(len(list_test_data[1]))
         test_results = [(np.argmax(self.feedforward(x)), y)
-                        for (x, y) in test_data]
+                        for (x, y) in list_test_data]
         return sum(int(x == y) for (x, y) in test_results)
 
     def cost_derivative(self, output_activations, y):
