@@ -51,28 +51,20 @@ class Network(object):
         network will be evaluated against the test data after each
         epoch, and partial progress printed out.  This is useful for
         tracking progress, but slows things down substantially."""
-        list_test_data = list(test_data)
-        test_data = zip(list_test_data)
-        list_training_data = list(training_data)
-        training_data = zip(list_training_data)
+        test_data = list(test_data)
+        training_data = list(training_data)
 
-        #print(len(list_test_data[0]))
-        n = len(list_training_data)
-        n_test = len(list_test_data)
+        n = len(training_data)
+        n_test = len(test_data)
         for j in range(epochs):
-            random.shuffle(list_training_data)
-            training_data = zip(list_training_data)
+            random.shuffle(training_data)
             mini_batches = [
-                list_training_data[k:k+mini_batch_size]
+                training_data[k:k+mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
-                #print(len(mini_batch[0][0]))
                 self.update_mini_batch(mini_batch, eta)
-            if test_data:
-                print("Epoch {0}: {1} / {2}".format(
-                    j, self.evaluate(list_test_data), n_test))
-            else:
-                print("Epoch {0} complete".format(j))
+            print("Epoch {0}: {1} / {2}".format(
+                j, self.evaluate(test_data), n_test))
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -125,15 +117,13 @@ class Network(object):
             nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
         return (nabla_b, nabla_w)
 
-    def evaluate(self, list_test_data):
+    def evaluate(self, test_data):
         """Return the number of test inputs for which the neural
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
-        test_data = zip(*list_test_data)
-        print(len(list_test_data[1]))
         test_results = [(np.argmax(self.feedforward(x)), y)
-                        for (x, y) in list_test_data]
+                        for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
 
     def cost_derivative(self, output_activations, y):
