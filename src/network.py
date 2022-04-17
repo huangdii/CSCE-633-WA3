@@ -56,15 +56,22 @@ class Network(object):
 
         n = len(training_data)
         n_test = len(test_data)
+        train_accuracies = []
+        test_accuracies = []
         for j in range(epochs):
             random.shuffle(training_data)
+            train_accuracies.append(self.evaluate(training_data))
             mini_batches = [
                 training_data[k:k+mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
+            
+            test_accuracy = self.evaluate(test_data)
+            test_accuracies.append(test_accuracy)
             print("Epoch {0}: {1} / {2}".format(
-                j, self.evaluate(test_data), n_test))
+                j, test_accuracy, n_test))
+        return {'train_acc':train_accuracies, 'test_acc': test_accuracies}
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -124,7 +131,10 @@ class Network(object):
         neuron in the final layer has the highest activation."""
         test_results = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in test_results)
+        if isinstance(test_results[1][1], int) or isinstance(test_results[1][1], np.int64):
+            return sum(int(x == y) for (x, y) in test_results)
+
+        return sum(int(x == np.argmax(y)) for (x, y) in test_results)
 
     def cost_derivative(self, output_activations, y):
         """Return the vector of partial derivatives \partial C_x /
