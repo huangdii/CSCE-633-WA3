@@ -1,7 +1,7 @@
 ## Base code CSCE 633: Machine Learning : WA3
 
 This repository provides same base code for Texas A&M University's CSCE 633 WA3.
-This repository provides python3 version of from Michael Nielsen's ["repository"](https://github.com/mnielsen/neural-networks-and-deep-learning)
+This repository provides python3 version of from Michael Nielsen's [repository](https://github.com/mnielsen/neural-networks-and-deep-learning).
 
 ## License
 
